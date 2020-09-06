@@ -75,6 +75,7 @@
             this.Controls.Add(this.lblInst);
             this.Name = "frmChessBoardGUI";
             this.Text = "Legal Chess Piece Moves";
+            this.Load += new System.EventHandler(this.frmChessBoardGUI_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

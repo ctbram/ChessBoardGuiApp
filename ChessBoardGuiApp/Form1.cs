@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
@@ -26,10 +27,11 @@ namespace ChessBoardGuiApp
             PopulateGrid();
         }
 
+        /// <summary>
+        /// create Buttons and place them into pnlBoard.
+        /// </summary>
         private void PopulateGrid()
         {
-            // create Buttons and place them into pnlBoard.
-
             int btnSize = pnlBoard.Width / _myBoard.Size;
 
             // make pnlBoard square
@@ -54,13 +56,57 @@ namespace ChessBoardGuiApp
                     btnGrid[i, j].Location = new Point(i * btnSize, j * btnSize);
 
                     btnGrid[i, j].Text = i + "|" + j;
+                    btnGrid[i, j].Tag = new Point(i, j);
                 }
             }
         }
 
+        /// <summary>
+        /// get the row and col of the button that was clicked
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Grid_Button_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("You pressed a button");
+            // get the row and column of the button that was clicked
+            Button clickedButton = (Button)sender;
+            Point location = (Point)clickedButton.Tag;
+
+            int row = location.X;
+            int col = location.Y;
+
+            Cell currentCell = _myBoard.TheGrid[row, col];
+
+            // determine the next legal moves on the grid
+            _myBoard.MarkNextLegalMoves(currentCell, cmbPieces.Text);
+
+            // update the text on each button
+            for (int i = 0; i < _myBoard.Size; i++)
+            {
+                for (int j = 0; j < _myBoard.Size; j++)
+                {
+                    btnGrid[i, j].Text = "";
+
+                    if (_myBoard.TheGrid[i, j].LegalNextMove)
+                    {
+                        btnGrid[i, j].Text = "legal";
+                    }
+                    else if (_myBoard.TheGrid[i, j].CurrentlyOccupied)
+                    {
+                        btnGrid[i, j].Text = cmbPieces.Text;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set default combo box choise as the first one
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void frmChessBoardGUI_Load(object sender, EventArgs e)
+        {
+            cmbPieces.SelectedIndex = 0;
         }
     }
 }
