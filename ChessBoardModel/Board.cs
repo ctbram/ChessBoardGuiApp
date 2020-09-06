@@ -63,7 +63,7 @@ namespace ChessBoardModel
                     dc = new[] {1, -1, 1, -1, 2, -2, 2, -2};
                     for (int i = 0; i < Size; i++)
                     {
-                        if (IsValidSquare(currentCell.RowNumber + dr[i], currentCell.ColumnNumber + dc[i]))
+                        if (IsInBounds(currentCell.RowNumber + dr[i], currentCell.ColumnNumber + dc[i]))
                             TheGrid[currentCell.RowNumber + dr[i], currentCell.ColumnNumber + dc[i]].LegalNextMove =
                                 true;
                     }
@@ -73,7 +73,7 @@ namespace ChessBoardModel
                     dc = new[] {-1, 0, 1, -1, 0, 1, 1, -1};
                     for (int i = 0; i < Size; i++)
                     {
-                        if (IsValidSquare(currentCell.RowNumber + dr[i], currentCell.ColumnNumber + dc[i]))
+                        if (IsInBounds(currentCell.RowNumber + dr[i], currentCell.ColumnNumber + dc[i]))
                             TheGrid[currentCell.RowNumber + dr[i], currentCell.ColumnNumber + dc[i]].LegalNextMove =
                                 true;
                     }
@@ -98,6 +98,8 @@ namespace ChessBoardModel
                     break;
             }
 
+            // mark current square as the correct piece
+            TheGrid[currentCell.RowNumber, currentCell.ColumnNumber].LegalNextMove = false;
             TheGrid[currentCell.RowNumber, currentCell.ColumnNumber].CurrentlyOccupied = true;
         }
 
@@ -112,10 +114,6 @@ namespace ChessBoardModel
                 TheGrid[currentCell.RowNumber, i].LegalNextMove = true;
                 TheGrid[i, currentCell.ColumnNumber].LegalNextMove = true;
             }
-
-            // set the current cell row and column to occupied
-            TheGrid[currentCell.RowNumber, currentCell.ColumnNumber].LegalNextMove = false;
-            TheGrid[currentCell.RowNumber, currentCell.ColumnNumber].CurrentlyOccupied = true;
         }
 
         /// <summary>
@@ -128,8 +126,7 @@ namespace ChessBoardModel
             var nxtRow = currentCell.RowNumber - 1;
             var nxtCol = currentCell.ColumnNumber + 1;
 
-            var isValidMove = IsValidSquare(nxtRow, nxtCol);
-            while (isValidMove)
+            while (IsInBounds(nxtRow, nxtCol))
             {
                 {
                     TheGrid[nxtRow, nxtCol].LegalNextMove = true;
@@ -138,15 +135,13 @@ namespace ChessBoardModel
                 // go up and to the left
                 nxtRow--;
                 nxtCol++;
-                isValidMove = IsValidSquare(nxtRow, nxtCol);
             }
 
             // go up and to the left until off board
             nxtRow = currentCell.RowNumber - 1;
             nxtCol = currentCell.ColumnNumber - 1;
 
-            isValidMove = IsValidSquare(nxtRow, nxtCol);
-            while (isValidMove)
+            while (IsInBounds(nxtRow, nxtCol))
             {
                 {
                     TheGrid[nxtRow, nxtCol].LegalNextMove = true;
@@ -155,15 +150,13 @@ namespace ChessBoardModel
                 // go up and to the left
                 nxtRow--;
                 nxtCol--;
-                isValidMove = IsValidSquare(nxtRow, nxtCol);
             }
 
             // go down and to the right until off board
             nxtRow = currentCell.RowNumber + 1;
             nxtCol = currentCell.ColumnNumber + 1;
 
-            isValidMove = IsValidSquare(nxtRow, nxtCol);
-            while (isValidMove)
+            while (IsInBounds(nxtRow, nxtCol))
             {
                 {
                     TheGrid[nxtRow, nxtCol].LegalNextMove = true;
@@ -172,15 +165,13 @@ namespace ChessBoardModel
                 // go up and to the left
                 nxtRow++;
                 nxtCol++;
-                isValidMove = IsValidSquare(nxtRow, nxtCol);
             }
 
             // go dowm and to the left until off board
             nxtRow = currentCell.RowNumber + 1;
             nxtCol = currentCell.ColumnNumber - 1;
 
-            isValidMove = IsValidSquare(nxtRow, nxtCol);
-            while (isValidMove)
+            while (IsInBounds(nxtRow, nxtCol))
             {
                 {
                     TheGrid[nxtRow, nxtCol].LegalNextMove = true;
@@ -189,7 +180,6 @@ namespace ChessBoardModel
                 // go up and to the left
                 nxtRow++;
                 nxtCol--;
-                isValidMove = IsValidSquare(nxtRow, nxtCol);
             }
         }
 
@@ -199,7 +189,7 @@ namespace ChessBoardModel
         /// <param name="nxtRow"></param>
         /// <param name="nxtCol"></param>
         /// <returns></returns>
-        private bool IsValidSquare(int nxtRow, int nxtCol)
+        private bool IsInBounds(int nxtRow, int nxtCol)
         {
             return nxtRow >= 0 && nxtRow < Size && nxtCol >= 0 && nxtCol < Size;
         }
