@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace ChessBoardModel
 {
     /// <summary>
-    /// The chess board made up of cells
+    /// The chess board made up of Cells
     /// </summary>
     public class Board
     {
