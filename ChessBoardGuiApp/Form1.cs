@@ -42,9 +42,11 @@ namespace ChessBoardGuiApp
             {
                 for (int j = 0; j < _myBoard.Size; j++)
                 {
-                    btnGrid[i, j] = new Button();
-                    btnGrid[i, j].Height = btnSize;
-                    btnGrid[i, j].Width = btnSize;
+                    btnGrid[i, j] = new Button
+                    {
+                        Height = btnSize,
+                        Width = btnSize
+                    };
 
                     // add a click event to each Button
                     btnGrid[i, j].Click += Grid_Button_Click;
